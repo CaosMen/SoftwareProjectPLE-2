@@ -10,8 +10,7 @@ public class Professor extends Colaborador {
     private ArrayList<Orientacao> orientacoes;
 
     public Professor(String nome, String email) {
-        super(nome, email);
-        this.orientacoes = new ArrayList<Orientacao>();
+        this(nome, email, new ArrayList<Publicacao>(), new ArrayList<Projeto>());
     }
 
     public Professor(String nome, String email, ArrayList<Publicacao> publicacoes, ArrayList<Projeto> projetos) {
@@ -20,7 +19,7 @@ public class Professor extends Colaborador {
     }
     
     public ArrayList<Orientacao> getOrientacoes() {
-        return orientacoes;
+        return this.orientacoes;
     }
 
     public void setOrientacoes(ArrayList<Orientacao> orientacoes) {

@@ -13,11 +13,7 @@ public class Publicacao {
     private ArrayList<Colaborador> autores;
 
     public Publicacao(String titulo, String nomeConferencia, int anoPublicacao, ArrayList<Colaborador> autores) {
-        this.titulo = titulo;
-        this.nomeConferencia = nomeConferencia;
-        this.anoPublicacao = anoPublicacao;
-        this.projeto = null;
-        this.autores = autores;
+        this(titulo, nomeConferencia, anoPublicacao, autores, null);
     }
 
     public Publicacao(String titulo, String nomeConferencia, int anoPublicacao, ArrayList<Colaborador> autores, Projeto projeto) {
@@ -69,24 +65,26 @@ public class Publicacao {
     }
 
     public String stringAutores() {
-        String autoresResult = "";
+        StringBuilder bld = new StringBuilder();
 
         for (int i = 0; i < this.autores.size(); i++) {
+            bld.append(this.autores.get(i).getNome());
+
             if (i == (this.autores.size() - 1)) {
-                autoresResult += this.autores.get(i).getNome() + ";";
+                bld.append(";");
             } else {
-                autoresResult += this.autores.get(i).getNome() + ", ";
+                bld.append(", ");
             }
         }
 
-        return autoresResult;
+        return bld.toString();
     }
 
-    public String toString(String position) {
-        return "    [" + position + "] Título: " + this.titulo + "\n"
-             + "    Nome da Conferência: " + this.nomeConferencia + "\n"
-             + "    Ano da Publicação: " + this.anoPublicacao + "\n"
-             + "    Autores: " + stringAutores() + "\n"
-             + "    Projeto associado: " + ((this.projeto == null) ? ("Sem projeto associado!") : ("\n\n" + this.projeto.toString(position + ".1")));
+    public String toString() {
+        return "Título: " + this.titulo + "\n"
+             + "Nome da Conferência: " + this.nomeConferencia + "\n"
+             + "Ano da Publicação: " + this.anoPublicacao + "\n"
+             + "Autores: " + stringAutores() + "\n"
+             + "Projeto associado: " + ((this.projeto == null) ? ("Sem projeto associado!") : ("\n\n" + this.projeto.toString()));
     }
 }

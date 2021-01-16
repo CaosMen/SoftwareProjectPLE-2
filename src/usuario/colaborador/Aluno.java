@@ -7,11 +7,10 @@ import java.util.ArrayList;
 
 public class Aluno extends Colaborador {
     private int tipo;
-    String[] tipos = {"Aluno de Graduação", "Aluno de Mestrado", "Aluno de Doutorado"};
+    String[] arrayTipo = {"Aluno de Graduação", "Aluno de Mestrado", "Aluno de Doutorado"};
 
     public Aluno(String nome, String email, int tipo) {
-        super(nome, email);
-        this.tipo = tipo;
+        this(nome, email, tipo, new ArrayList<Publicacao>(), new ArrayList<Projeto>());
     }
 
     public Aluno(String nome, String email, int tipo, ArrayList<Publicacao> publicacoes, ArrayList<Projeto> projetos) {
@@ -20,7 +19,7 @@ public class Aluno extends Colaborador {
     }
 
     public String getTipo() {
-        return this.tipos[this.tipo];
+        return this.arrayTipo[this.tipo];
     }
 
     public void setTipo(int tipo) {

@@ -11,7 +11,7 @@ public class Administrador extends Usuario {
     }
 
     public String getLogin() {
-        return login;
+        return this.login;
     }
 
     public void setLogin(String login) {
@@ -19,7 +19,7 @@ public class Administrador extends Usuario {
     }
 
     public String getSenha() {
-        return senha;
+        return this.senha;
     }
 
     public void setSenha(String senha) {
@@ -27,6 +27,6 @@ public class Administrador extends Usuario {
     }
 
     public Boolean checkLogin(String login, String senha) {
-        return (login.equals(getLogin()) && senha.equals(getSenha())); 
+        return (login.equals(this.login) && senha.equals(this.senha)); 
     }
 }

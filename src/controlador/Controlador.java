@@ -13,63 +13,77 @@ import leitor.*;
 import usuario.colaborador.*;
 
 public class Controlador {
-    public Administrador cadastroAdministrador(Scanner reader, Leitor leitor) {
-        System.out.println("Bem vindo Administrador!\n");
-
-        System.out.print("Digite o seu nome: ");
-        String nome = reader.nextLine();
-        String email = leitor.regexValidator(reader, "Digite o seu e-mail: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
-        System.out.print("Digite o seu login: ");
-        String login = reader.nextLine();
-        System.out.print("Digite a sua senha: ");
-        String senha = reader.nextLine();
-
-        return new Administrador(nome, email, login, senha);
-    }
-
-    public Laboratorio cadastroLaboratorio(Scanner reader, Administrador administrador) {
-        System.out.println("Bem vindo " + administrador.getNome() + "!\n");
-
-        System.out.print("Digite o nome do Laboratório: ");
-        String nome = reader.nextLine();
-
-        return new Laboratorio(nome, administrador);
-    }
+    /* Exibição Menu */
 
     public void menuPrint(Administrador administrador) {
         System.out.println("Bem vindo " + administrador.getNome() + "!\n");
 
-        System.out.println("Escolha uma das opções abaixo:\n");
-        System.out.println("Digite (1) para adicionar um Colaborador");
-        System.out.println("Digite (2) para criar um Projeto");
-        System.out.println("Digite (3) para alocar um colaborador a um Projeto");
-        System.out.println("Digite (4) para alterar o status de um Projeto");
-        System.out.println("Digite (5) para adicionar uma Publicação");
-        System.out.println("Digite (6) para adicionar uma Orientação");
-        System.out.println("Digite (7) para fazer a consulta de um Colaborador");
-        System.out.println("Digite (8) para fazer a consulta de um Projeto");
-        System.out.println("Digite (9) para gerar o relatório do Laboratório");
-        System.out.println("Digite (10) para listar todos os Colaboradores");
-        System.out.println("Digite (0) para Sair!\n");
+        System.out.println("Escolha uma das opções abaixo:\n\n"
+                         + "Digite (1) para adicionar um Colaborador\n"
+                         + "Digite (2) para criar um Projeto\n"
+                         + "Digite (3) para alocar um colaborador a um Projeto\n"
+                         + "Digite (4) para alterar o status de um Projeto\n"
+                         + "Digite (5) para adicionar uma Publicação\n"
+                         + "Digite (6) para adicionar uma Orientação\n"
+                         + "Digite (7) para fazer a consulta de um Colaborador\n"
+                         + "Digite (8) para fazer a consulta de um Projeto\n"
+                         + "Digite (9) para gerar o relatório do Laboratório\n"
+                         + "Digite (10) para listar todos os Colaboradores\n"
+                         + "Digite (0) para Sair!\n");
     }
+
+    /* Criação do Administrador e Laboratório */
+
+    public Administrador cadastroAdministrador(Scanner reader, Leitor leitor) {
+        System.out.println("Bem vindo Administrador!\n");
+
+        String nome = leitor.stringReader(reader, "Digite o seu nome: ");
+        String email = leitor.regexValidatorReader(reader, "Digite o seu e-mail: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+        String login = leitor.stringReader(reader, "Digite o seu login: ");
+        String senha = leitor.stringReader(reader, "Digite a sua senha: ");
+
+        return new Administrador(nome, email, login, senha);
+    }
+
+    public Laboratorio cadastroLaboratorio(Scanner reader, Administrador administrador, Leitor leitor) {
+        System.out.println("Bem vindo " + administrador.getNome() + "!\n");
+
+        String nome = leitor.stringReader(reader, "Digite o nome do Laboratório: ");
+
+        return new Laboratorio(nome, administrador);
+    }
+
+    public void mostrarLaboratorio(Laboratorio laboratorio) {
+        System.out.println("Relatório de produção acadêmica do Laboratório:\n");
+
+        System.out.println("Número de colaboradores: " + laboratorio.getColaboradores().size());
+        System.out.println("Número de projeto em elaboração: " + this.getProjetosByStatus("Em elaboração", laboratorio));
+        System.out.println("Número de projeto em andamento: " + this.getProjetosByStatus("Em andamento", laboratorio));
+        System.out.println("Número de projeto concluídos: " + this.getProjetosByStatus("Concluído", laboratorio));
+        System.out.println("Número total de projeto: " + laboratorio.getProjetos().size());
+        System.out.println("Número total de Publicações: " + this.getAllPublicacoes(laboratorio).size());
+        System.out.println("Número total de Orientação: " + this.getAllOrientacoes(laboratorio).size());
+        System.out.println("Número total de Produções Acadêmicas: " + (this.getAllPublicacoes(laboratorio).size() + this.getAllOrientacoes(laboratorio).size()));
+    }
+
+    /* Colaborador */
 
     public Colaborador criarColaborador(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Criação de Colaborador!\n");
 
-        System.out.print("Digite o nome do Colaborador: ");
-        String nome = reader.nextLine();
+        String nome = leitor.stringReader(reader, "Digite o nome do Colaborador: ");
 
         if (laboratorio.procurarColaborador(nome) == null) {
-            String email = leitor.regexValidator(reader, "Digite o e-mail do Colaborador: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+            String email = leitor.regexValidatorReader(reader, "Digite o e-mail do Colaborador: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
             System.out.println("Escolha um tipo de Colaborador:\n");
 
-            System.out.println("Digite (1) para o tipo Aluno de Graduação");
-            System.out.println("Digite (2) para o tipo Aluno de Mestrado");
-            System.out.println("Digite (3) para o tipo Aluno de Doutorado");
-            System.out.println("Digite (4) para o tipo Professor");
-            System.out.println("Digite (5) para o tipo Pesquisador\n");
+            System.out.println("Digite (1) para o tipo Aluno de Graduação\n"
+                             + "Digite (2) para o tipo Aluno de Mestrado\n"
+                             + "Digite (3) para o tipo Aluno de Doutorado\n"
+                             + "Digite (4) para o tipo Professor\n"
+                             + "Digite (5) para o tipo Pesquisador\n");
 
-            int tipo = leitor.readOption(reader, "Colaborador tipo: ", 1, 5);
+            int tipo = leitor.optionReader(reader, "Colaborador tipo: ", 1, 5);
 
             Colaborador novoColaborador;
 
@@ -91,11 +105,10 @@ public class Controlador {
         }
     }
 
-    public Colaborador buscarColaborador(Scanner reader, Laboratorio laboratorio) {
+    public Colaborador buscarColaborador(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Consulta de Colaborador!\n");
 
-        System.out.print("Digite o nome do Colaborador: ");
-        String nome = reader.nextLine();
+        String nome = leitor.stringReader(reader, "Digite o nome do Colaborador: ");
 
         Colaborador colaborador = laboratorio.procurarColaborador(nome);
 
@@ -108,78 +121,66 @@ public class Controlador {
         }
     }
 
-    public Projeto buscarProjeto(Scanner reader, Laboratorio laboratorio) {
-        System.out.println("Consulta de Projeto!\n");
+    public void alocarColaborador(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
+        System.out.println("Alocação de Colaborador!\n");
 
-        System.out.print("Digite o título Projeto: ");
-        String titulo = reader.nextLine();
+        String titulo = leitor.stringReader(reader, "Digite o título do projeto ao qual deseja alocar um Colaborador: ");
 
         Projeto projeto = laboratorio.procurarProjeto(titulo);
 
         if (projeto != null) {
-            return projeto;
-        } else {
-            System.out.println("\nNão existe um projeto com este título!");
+            if (projeto.getStatus().equals("Em elaboração")) {
+                String nome = leitor.stringReader(reader, "Digite o nome do Colaborador: ");
 
-            return null;
-        }
-    }
+                Colaborador colaborador = laboratorio.procurarColaborador(nome);
 
-    public void printProjetosByStatus(Colaborador colaborador, String status) {
-        int counter = 0;
-
-        ArrayList<Projeto> projetos = colaborador.getProjetos();
-
-        for (int i = 0; i < projetos.size(); i++) {
-            if (projetos.get(i).getStatus().equals(status)) {
-                counter++;
-            }
-        }
-
-        if (counter > 0) {
-            System.out.println(status + ":");
-
-            for (int i = 0; i < projetos.size(); i++) {
-                if (projetos.get(i).getStatus().equals(status)) {
-                    System.out.println("\n" + projetos.get(i).toString(String.valueOf(i + 1)));
-                }
-            }
-
-            System.out.println("");
-        } else {
-            System.out.println("Sem projetos com o status " + status + "!");
-        }
-    }
-
-    public void printPublicacoes(Colaborador colaborador) {
-        ArrayList<Publicacao> publicacoes = colaborador.getPublicacoes();
-
-        if (!publicacoes.isEmpty()) {
-            System.out.println("Publicações:");
-            for (int i = 0; i < publicacoes.size(); i++) {
-                System.out.println("\n" + publicacoes.get(i).toString(String.valueOf(i + 1)));
-            }
-            System.out.println("");
-        } else {
-            System.out.println("Sem Publicações!");
-        }
-    }
-
-    public void printOrientacoes(Colaborador colaborador) {
-        if (colaborador instanceof Professor) {
-            Professor professor = (Professor)colaborador;
-
-            ArrayList<Orientacao> orientacoes = professor.getOrientacoes();
-
-            if (!orientacoes.isEmpty()) {
-                System.out.println("Orientações:");
-                for (int i = 0; i < orientacoes.size(); i++) {
-                    Orientacao orientacao = orientacoes.get(i);
-                    System.out.println("    [" + (i + 1) + "] Título: " + orientacao.getTitulo() + ", Ano de Início: " + orientacao.getAnoOrientacao() + ", Aluno: " + orientacao.getOrientando().getNome());
+                if (colaborador != null) {
+                    addColaborador(projeto, colaborador);
+                } else {
+                    System.out.println("\nNão existe um colaborador com este nome!");
                 }
             } else {
-                System.out.println("Sem Orientações!");
+                System.out.println("\nO projeto não está 'Em elaboração' (A alocação deve ser permitida apenas quando o projeto estiver 'Em elaboração')");
             }
+        } else {
+            System.out.println("\nNão existe um projeto com este título!");
+        }
+    }
+
+    /* Colaborador Funções */
+
+    public void addColaborador(Projeto projeto, Colaborador colaborador) {
+        projeto.addParticipante(colaborador);
+        colaborador.addProjeto(projeto);
+
+        System.out.println("\nColaborador alocado!");
+    }
+
+    public void mostrarColaboradores(Laboratorio laboratorio) {
+        System.out.println("Lista de Colaboradores:\n");
+
+        ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
+
+        if (!colaboradores.isEmpty()) {
+            for (int i = 0; i < colaboradores.size(); i++) {
+                Colaborador colaborador = colaboradores.get(i);
+
+                String tipo = "Colaborador";
+
+                if (colaborador instanceof Aluno) {
+                    Aluno aluno = (Aluno)colaborador;
+
+                    tipo = aluno.getTipo();
+                } else if (colaborador instanceof Pesquisador) {
+                    tipo = "Pesquisador";
+                } else if (colaborador instanceof Professor) {
+                    tipo = "Professor";
+                }
+                
+                System.out.println("    [" + (i + 1) + "] Nome: " + colaborador.getNome() + ", E-mail: " + colaborador.getEmail() + ", Tipo de colaborador: " + tipo);
+            }
+        } else {
+            System.out.println("Sem colaboradores!");
         }
     }
 
@@ -194,57 +195,56 @@ public class Controlador {
         this.printOrientacoes(colaborador);
     }
 
-    public void mostrarInformacoesProjeto(Projeto projeto) {
-        System.out.print("\n" + projeto);
+    /* Projeto */
 
-        ArrayList<Publicacao> publicacoes = projeto.getPublicacoes();
+    public Projeto buscarProjeto(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
+        System.out.println("Consulta de Projeto!\n");
 
-        if (!publicacoes.isEmpty()) {
-            System.out.println("\n\nProdução Acadêmica:\n");
+        String titulo = leitor.stringReader(reader, "Digite o título do Projeto: ");
 
-            for (int i = 0; i < publicacoes.size(); i++) {
-                System.out.println(publicacoes.get(i).toString(String.valueOf(i + 1)));
-            }
+        Projeto projeto = laboratorio.procurarProjeto(titulo);
+
+        if (projeto != null) {
+            return projeto;
+        } else {
+            System.out.println("\nNão existe um projeto com este título!");
+
+            return null;
         }
-
-        System.out.println("");
     }
 
     public Projeto criarProjeto(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Criação de Projeto!\n");
 
-        System.out.print("Digite o título do Projeto: ");
-        String titulo = reader.nextLine();
+        String titulo = leitor.stringReader(reader, "Digite o título do Projeto: ");
 
         if (laboratorio.procurarProjeto(titulo) == null) {
             LocalDate dataInicio = leitor.dateReader(reader, "Digite a Data de Ínicio do Projeto (Formato: dd/MM/yyyy): ");
 
             LocalDate dataTermino = leitor.dateReader(reader, "Digite a Data de Termino do Projeto (Formato: dd/MM/yyyy): ");
 
-            System.out.print("Digite o nome da Agência Financiadora do Projeto: ");
-            String agenciaFinanciadora = reader.nextLine();
-            float valorFinanciado = Float.parseFloat(leitor.regexValidator(reader, "Digite o valor financiado do Projeto em R$: ", "\\d+([,.]\\d+)?(;|$)"));
-            System.out.print("Digite o objetivo do Projeto: ");
-            String objetivo = reader.nextLine();
-            System.out.print("Digite a descrição do Projeto: ");
-            String descricao = reader.nextLine();
+            String agenciaFinanciadora = leitor.stringReader(reader, "Digite o nome da Agência Financiadora do Projeto: ");
+
+            float valorFinanciado = Float.parseFloat(leitor.regexValidatorReader(reader, "Digite o valor financiado do Projeto em R$: ", "\\d+([,.]\\d+)?(;|$)"));
+
+            String objetivo = leitor.stringReader(reader, "Digite o objetivo do Projeto: ");
+
+            String descricao = leitor.stringReader(reader, "Digite a descrição do Projeto: ");
 
             boolean professorCreate = true;
 
             Colaborador professor = null;
 
             while (professorCreate) {
-                System.out.print("Informe o nome do professor (Você deve alocar ao menos um professor ao novo projeto): ");
-                String nomeProfessor = reader.nextLine();
+                String nomeProfessor = leitor.stringReader(reader, "Informe o nome do professor (Você deve alocar ao menos um professor ao novo projeto): ");
 
                 Colaborador professorBusca = laboratorio.procurarColaborador(nomeProfessor);
 
                 if (professorBusca != null) {
                     if (professorBusca instanceof Professor) {
-                        System.out.print("\nJá existe um professor cadastrado com esse nome, deseja adicioná-lo? (Digite 'sim' ou 'não'): ");
-                        String addOption = reader.nextLine();
+                        boolean addOption = leitor.stringBoolReader(reader, "\nJá existe um professor cadastrado com esse nome, deseja adicioná-lo? (Digite 'sim' ou 'não'): ");
 
-                        if (addOption.equalsIgnoreCase("sim")) {
+                        if (addOption) {
                             professor = professorBusca;
 
                             professorCreate = false;
@@ -255,7 +255,7 @@ public class Controlador {
                         System.out.print("\nJá existe um colaborador com este nome (informe outro nome)\n\n");
                     }
                 } else {
-                    String emailProfessor = leitor.regexValidator(reader, "Informe o e-mail do professor: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
+                    String emailProfessor = leitor.regexValidatorReader(reader, "Informe o e-mail do professor: ", "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
 
                     professor = new Professor(nomeProfessor, emailProfessor);
 
@@ -279,20 +279,18 @@ public class Controlador {
         }
     }
 
-    public void alterarStatus(Scanner reader, Laboratorio laboratorio) {
+    public void alterarStatus(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Alterador de status!\n");
 
-        System.out.print("Digite o título Projeto: ");
-        String titulo = reader.nextLine();
+        String titulo = leitor.stringReader(reader, "Digite o título do Projeto: ");
 
         Projeto projeto = laboratorio.procurarProjeto(titulo);
 
         if (projeto != null) {
             if (projeto.getStatus().equals("Em elaboração")) {
-                System.out.print("\nVocê deseja alterar o status 'Em elaboração' para 'Em andamento'? (Digite 'sim' ou 'não'): ");
-                String statusOption = reader.nextLine();
+                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em elaboração' para 'Em andamento'? (Digite 'sim' ou 'não'): ");
 
-                if (statusOption.equalsIgnoreCase("sim")) {
+                if (statusOption) {
                     if (projeto.alterarStatus()) {
                         System.out.println("\nStatus alterado com sucesso!");
                     } else {
@@ -304,19 +302,16 @@ public class Controlador {
                             if (colaboradores.get(i) instanceof Aluno) {
                                 Aluno aluno = (Aluno)colaboradores.get(i);
             
-                                if (aluno.getTipo().equals("Aluno de Graduação")) {
-                                    if (aluno.getProjetosByStatus("Em andamento").size() == 2) {
-                                        System.out.println("    [" + (i + 1) + "] Nome: " + aluno.getNome() + ", E-mail: " + aluno.getEmail());
-                                        alunosRemover.add(aluno);
-                                    }
+                                if (aluno.getTipo().equals("Aluno de Graduação") && aluno.getProjetosByStatus("Em andamento").size() == 2) {
+                                    System.out.println("    [" + (i + 1) + "] Nome: " + aluno.getNome() + ", E-mail: " + aluno.getEmail());
+                                    alunosRemover.add(aluno);
                                 }
                             }
                         }
 
-                        System.out.print("\nDeseja remover estes alunos do projeto? (Digite 'sim' ou 'não'): ");
-                        String deleteOption = reader.nextLine();
+                        boolean deleteOption = leitor.stringBoolReader(reader, "\nDeseja remover estes alunos do projeto? (Digite 'sim' ou 'não'): ");
 
-                        if (deleteOption.equalsIgnoreCase("sim")) {
+                        if (deleteOption) {
                             for (int i = 0; i < alunosRemover.size(); i++) {
                                 alunosRemover.get(i).removeProjeto(projeto);
                                 projeto.removeParticipante(alunosRemover.get(i));
@@ -329,10 +324,9 @@ public class Controlador {
                     System.out.println("\nStatus não alterado!");
                 }
             } else if (projeto.getStatus().equals("Em andamento")) {
-                System.out.print("\nVocê deseja alterar o status 'Em andamento' para 'Concluído'? (Digite 'sim' ou 'não'): ");
-                String statusOption = reader.nextLine();
+                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em andamento' para 'Concluído'? (Digite 'sim' ou 'não'): ");
 
-                if (statusOption.equalsIgnoreCase("sim")) {
+                if (statusOption) {
                     if (projeto.alterarStatus()) {
                         System.out.println("\nStatus alterado com sucesso!");
                     } else {
@@ -347,40 +341,65 @@ public class Controlador {
         }
     }
 
-    public void addColaborador(Projeto projeto, Colaborador colaborador) {
-        projeto.addParticipante(colaborador);
-        colaborador.addProjeto(projeto);
+    /* Projeto Funções */
 
-        System.out.println("\nColaborador alocado!");
+    public int getProjetosByStatus(String status, Laboratorio laboratorio) {
+        int counter = 0;
+
+        ArrayList<Projeto> projetos = laboratorio.getProjetos();
+
+        for (int i = 0; i < projetos.size(); i++) {
+            if (projetos.get(i).getStatus().equals(status)) {
+                counter++;
+            }
+        }
+
+        return counter;
     }
 
-    public void alocarColaborador(Scanner reader, Laboratorio laboratorio) {
-        System.out.println("Alocação de Colaborador!\n");
+    public void mostrarInformacoesProjeto(Projeto projeto) {
+        System.out.print("\n" + projeto);
 
-        System.out.print("Digite o título do projeto ao qual deseja alocar um Colaborador: ");
-        String titulo = reader.nextLine();
+        ArrayList<Publicacao> publicacoes = projeto.getPublicacoes();
 
-        Projeto projeto = laboratorio.procurarProjeto(titulo);
+        if (!publicacoes.isEmpty()) {
+            System.out.println("\n\nProdução Acadêmica:\n");
 
-        if (projeto != null) {
-            if (projeto.getStatus().equals("Em elaboração")) {
-                System.out.print("Digite o nome do Colaborador: ");
-                String nome = reader.nextLine();
-
-                Colaborador colaborador = laboratorio.procurarColaborador(nome);
-
-                if (colaborador != null) {
-                    addColaborador(projeto, colaborador);
-                } else {
-                    System.out.println("\nNão existe um colaborador com este nome!");
-                }
-            } else {
-                System.out.println("\nO projeto não está 'Em elaboração' (A alocação deve ser permitida apenas quando o projeto estiver 'Em elaboração')");
+            for (int i = 0; i < publicacoes.size(); i++) {
+                System.out.println(publicacoes.get(i).toString());
             }
+        }
+
+        System.out.println("");
+    }
+
+    public void printProjetosByStatus(Colaborador colaborador, String status) {
+        int counter = 0;
+
+        ArrayList<Projeto> projetos = colaborador.getProjetos();
+
+        for (int i = 0; i < projetos.size(); i++) {
+            if (projetos.get(i).getStatus().equals(status)) {
+                counter++;
+            }
+        }
+
+        if (counter > 0) {
+            System.out.println(status + ":");
+
+            for (int i = 0; i < projetos.size(); i++) {
+                if (projetos.get(i).getStatus().equals(status)) {
+                    System.out.println("\n" + projetos.get(i).toString());
+                }
+            }
+
+            System.out.println("");
         } else {
-            System.out.println("\nNão existe um projeto com este título!");
+            System.out.println("Sem projetos com o status " + status + "!");
         }
     }
+
+    /* Publicação */
 
     public void addPublicacao(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         if (!laboratorio.getColaboradores().isEmpty()) {
@@ -388,20 +407,19 @@ public class Controlador {
 
             System.out.println("Adicionar uma Publicação!\n");
 
-            System.out.print("Digite o título da Publicação: ");
-            String titulo = reader.nextLine();
-            System.out.print("Digite o nome da conferência onde foi Publicada: ");
-            String conferencia = reader.nextLine();
-            int ano = Integer.parseInt(leitor.regexValidator(reader, "Digite o ano de Publicação (Formato: yyyy): ", "^[0-9]{4}$"));
-            System.out.print("A publicação tem algum projeto associado? (Digite 'sim' ou 'não'): ");
-            String optProjeto = reader.nextLine();
+            String titulo = leitor.stringReader(reader, "Digite o título da Publicação: ");
 
-            if (optProjeto.equalsIgnoreCase("sim")) {
+            String conferencia = leitor.stringReader(reader, "Digite o nome da conferência onde foi Publicada: ");
+
+            int ano = Integer.parseInt(leitor.regexValidatorReader(reader, "Digite o ano de Publicação (Formato: yyyy): ", "^[0-9]{4}$"));
+
+            boolean optProjeto = leitor.stringBoolReader(reader, "A publicação tem algum projeto associado? (Digite 'sim' ou 'não'): ");
+
+            if (optProjeto) {
                 boolean loop = true;
 
                 while (loop) {
-                    System.out.print("Digite o título do Projeto (Para cancelar digite 'sair'): ");
-                    String projetoTitulo = reader.nextLine();
+                    String projetoTitulo = leitor.stringReader(reader, "Digite o título do Projeto (Para cancelar digite 'sair'): ");
 
                     if (!projetoTitulo.equalsIgnoreCase("sair")) {
                         projeto = laboratorio.procurarProjeto(projetoTitulo);
@@ -425,8 +443,8 @@ public class Controlador {
                 }
             }
 
-            System.out.println("\nSeleção dos autores da Publicação: ");
-            System.out.println("\nColaboradores:");
+            System.out.println("\nSeleção dos autores da Publicação: \n"
+                             + "\nColaboradores:");
 
             ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
 
@@ -434,8 +452,8 @@ public class Controlador {
                 System.out.println("    [" + (i + 1) + "] Nome: " + colaboradores.get(i).getNome() + ", E-mail: " + colaboradores.get(i).getEmail());
             }
 
-            System.out.print("\nDigite o número de no mínimo um colaborador para associá-lo a Publicação (Formato: 1, 2, 3, ...): ");
-            String list = reader.nextLine();
+            System.out.println("");
+            String list = leitor.stringReader(reader, "Digite o número de no mínimo um colaborador para associá-lo a Publicação (Formato: 1, 2, 3, ...): ");
 
             String[] addColaboradores = list.replaceAll("\\s+","").split(",");
 
@@ -481,11 +499,45 @@ public class Controlador {
         }
     }
 
+    /* Publicação Funções */
+
+    public ArrayList<Publicacao> getAllPublicacoes(Laboratorio laboratorio) {
+        ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
+        ArrayList<Publicacao> publicacoesResultado = new ArrayList<Publicacao>();
+
+        for (int i = 0; i < colaboradores.size(); i++) {
+            ArrayList<Publicacao> publicacoesColaborador = colaboradores.get(i).getPublicacoes();
+
+            for (int j = 0; j < publicacoesColaborador.size(); j++) {
+                if (!publicacoesResultado.contains(publicacoesColaborador.get(j))) {
+                    publicacoesResultado.add(publicacoesColaborador.get(j));
+                }
+            }
+        }
+
+        return publicacoesResultado;
+    }
+
+    public void printPublicacoes(Colaborador colaborador) {
+        ArrayList<Publicacao> publicacoes = colaborador.getPublicacoes();
+
+        if (!publicacoes.isEmpty()) {
+            System.out.println("Publicações:");
+            for (int i = 0; i < publicacoes.size(); i++) {
+                System.out.println("\n" + publicacoes.get(i).toString());
+            }
+            System.out.println("");
+        } else {
+            System.out.println("Sem Publicações!");
+        }
+    }
+
+    /* Orientação */
+
     public void adicionarOrientacao(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Adicionar uma Orientação!\n");
 
-        System.out.print("Digite o nome do Orientador: ");
-        String nomeOrientador = reader.nextLine();
+        String nomeOrientador = leitor.stringReader(reader, "Digite o nome do Orientador: ");
 
         Colaborador orientador = laboratorio.procurarColaborador(nomeOrientador);
 
@@ -493,8 +545,7 @@ public class Controlador {
             if (orientador instanceof Professor) {
                 Professor professor = (Professor)orientador;
                 
-                System.out.print("Digite o nome do colaborador que vai ser orientado pelo professor " + professor.getNome() + ": ");
-                String nomeOrientando = reader.nextLine();
+                String nomeOrientando = leitor.stringReader(reader, "Digite o nome do colaborador que vai ser orientado pelo professor " + professor.getNome() + ": ");
 
                 Colaborador orientando = laboratorio.procurarColaborador(nomeOrientando);
 
@@ -502,9 +553,9 @@ public class Controlador {
                     if (orientando instanceof Aluno) {
                         Aluno aluno = (Aluno)orientando;
 
-                        System.out.print("Digite o titulo da Orientação: ");
-                        String titulo = reader.nextLine();
-                        int anoOrientacao = Integer.parseInt(leitor.regexValidator(reader, "Digite o ano de início da Orientação (Formato: yyyy): ", "^[0-9]{4}$"));
+                        String titulo = leitor.stringReader(reader, "Digite o titulo da Orientação: ");
+
+                        int anoOrientacao = Integer.parseInt(leitor.regexValidatorReader(reader, "Digite o ano de início da Orientação (Formato: yyyy): ", "^[0-9]{4}$"));
 
                         Orientacao orientacao = new Orientacao(titulo, anoOrientacao, professor, aluno);
 
@@ -525,36 +576,7 @@ public class Controlador {
         }
     }
 
-    public int getProjetosByStatus(String status, Laboratorio laboratorio) {
-        int counter = 0;
-
-        ArrayList<Projeto> projetos = laboratorio.getProjetos();
-
-        for (int i = 0; i < projetos.size(); i++) {
-            if (projetos.get(i).getStatus().equals(status)) {
-                counter++;
-            }
-        }
-
-        return counter;
-    }
-
-    public ArrayList<Publicacao> getAllPublicacoes(Laboratorio laboratorio) {
-        ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
-        ArrayList<Publicacao> publicacoesResultado = new ArrayList<Publicacao>();
-
-        for (int i = 0; i < colaboradores.size(); i++) {
-            ArrayList<Publicacao> publicacoesColaborador = colaboradores.get(i).getPublicacoes();
-
-            for (int j = 0; j < publicacoesColaborador.size(); j++) {
-                if (!publicacoesResultado.contains(publicacoesColaborador.get(j))) {
-                    publicacoesResultado.add(publicacoesColaborador.get(j));
-                }
-            }
-        }
-
-        return publicacoesResultado;
-    }
+    /* Orientação Funções */
 
     public ArrayList<Orientacao> getAllOrientacoes(Laboratorio laboratorio) {
         ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
@@ -575,44 +597,21 @@ public class Controlador {
         return orientacoesResultado;
     }
 
-    public void mostrarLaboratorio(Laboratorio laboratorio) {
-        System.out.println("Relatório de produção acadêmica do Laboratório:\n");
+    public void printOrientacoes(Colaborador colaborador) {
+        if (colaborador instanceof Professor) {
+            Professor professor = (Professor)colaborador;
 
-        System.out.println("Número de colaboradores: " + laboratorio.getColaboradores().size());
-        System.out.println("Número de projeto em elaboração: " + this.getProjetosByStatus("Em elaboração", laboratorio));
-        System.out.println("Número de projeto em andamento: " + this.getProjetosByStatus("Em andamento", laboratorio));
-        System.out.println("Número de projeto concluídos: " + this.getProjetosByStatus("Concluído", laboratorio));
-        System.out.println("Número total de projeto: " + laboratorio.getProjetos().size());
-        System.out.println("Número total de Publicações: " + this.getAllPublicacoes(laboratorio).size());
-        System.out.println("Número total de Orientação: " + this.getAllOrientacoes(laboratorio).size());
-        System.out.println("Número total de Produções Acadêmicas: " + (this.getAllPublicacoes(laboratorio).size() + this.getAllOrientacoes(laboratorio).size()));
-    }
+            ArrayList<Orientacao> orientacoes = professor.getOrientacoes();
 
-    public void mostrarColaboradores(Laboratorio laboratorio) {
-        System.out.println("Lista de Colaboradores:\n");
-
-        ArrayList<Colaborador> colaboradores = laboratorio.getColaboradores();
-
-        if (!colaboradores.isEmpty()) {
-            for (int i = 0; i < colaboradores.size(); i++) {
-                Colaborador colaborador = colaboradores.get(i);
-
-                String tipo = "Colaborador";
-
-                if (colaborador instanceof Aluno) {
-                    Aluno aluno = (Aluno)colaborador;
-
-                    tipo = aluno.getTipo();
-                } else if (colaborador instanceof Pesquisador) {
-                    tipo = "Pesquisador";
-                } else if (colaborador instanceof Professor) {
-                    tipo = "Professor";
+            if (!orientacoes.isEmpty()) {
+                System.out.println("Orientações:");
+                for (int i = 0; i < orientacoes.size(); i++) {
+                    Orientacao orientacao = orientacoes.get(i);
+                    System.out.println("    [" + (i + 1) + "] Título: " + orientacao.getTitulo() + ", Ano de Início: " + orientacao.getAnoOrientacao() + ", Aluno: " + orientacao.getOrientando().getNome());
                 }
-                
-                System.out.println("    [" + (i + 1) + "] Nome: " + colaborador.getNome() + ", E-mail: " + colaborador.getEmail() + ", Tipo de colaborador: " + tipo);
+            } else {
+                System.out.println("Sem Orientações!");
             }
-        } else {
-            System.out.println("Sem colaboradores!");
         }
     }
 }

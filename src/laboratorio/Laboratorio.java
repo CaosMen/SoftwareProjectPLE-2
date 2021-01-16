@@ -8,15 +8,13 @@ import usuario.*;
 
 public class Laboratorio {
     private String nome;
-    private ArrayList<Colaborador> colaboradores;
-    private ArrayList<Projeto> projetos;
     private Administrador administrador;
+    private ArrayList<Colaborador> colaboradores = new ArrayList<Colaborador>();
+    private ArrayList<Projeto> projetos = new ArrayList<Projeto>();
 
     public Laboratorio(String nome, Administrador administrador) {
         this.nome = nome;
         this.administrador = administrador;
-        this.colaboradores = new ArrayList<Colaborador>();
-        this.projetos = new ArrayList<Projeto>();
     }
 
     public String getNome() {

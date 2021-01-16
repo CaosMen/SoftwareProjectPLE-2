@@ -10,11 +10,11 @@ public class Usuario {
     }
 
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setNome(String nome) {

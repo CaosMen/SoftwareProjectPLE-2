@@ -15,9 +15,9 @@ public class Projeto {
     private float valorFinanciado;
     private String objetivo;
     private String descricao;
-    private String status;
-    private ArrayList<Colaborador> participantes;
-    private ArrayList<Publicacao> publicacoes;
+    private String status = "Em elaboração";
+    private ArrayList<Colaborador> participantes = new ArrayList<Colaborador>();
+    private ArrayList<Publicacao> publicacoes = new ArrayList<Publicacao>();
 
     public Projeto(String titulo, LocalDate dataInicio, LocalDate dataTermino, String agenciaFinanciadora, float valorFinanciado, String objetivo, String descricao, Colaborador professor) {
         this.titulo = titulo;
@@ -27,12 +27,8 @@ public class Projeto {
         this.valorFinanciado = valorFinanciado;
         this.objetivo = objetivo;
         this.descricao = descricao;
-        this.status = "Em elaboração";
 
-        this.participantes = new ArrayList<Colaborador>();
         this.participantes.add(professor);
-
-        this.publicacoes = new ArrayList<Publicacao>();
     }
 
     public String getTitulo() {
@@ -107,10 +103,8 @@ public class Projeto {
                 if (this.participantes.get(i) instanceof Aluno) {
                     Aluno aluno = (Aluno)this.participantes.get(i);
 
-                    if (aluno.getTipo().equals("Aluno de Graduação")) {
-                        if (aluno.getProjetosByStatus("Em andamento").size() == 2) {
-                            alunoCheck = false;
-                        }
+                    if (aluno.getTipo().equals("Aluno de Graduação") && aluno.getProjetosByStatus("Em andamento").size() == 2) {
+                        alunoCheck = false;
                     }
                 }
             }
@@ -138,17 +132,19 @@ public class Projeto {
     }
 
     public String stringParticipantes() {
-        String participantesResult = "(";
+        StringBuilder bld = new StringBuilder("(");
 
         for (int i = 0; i < this.participantes.size(); i++) {
+            bld.append(this.participantes.get(i).getNome());
+
             if (i == (this.participantes.size() - 1)) {
-                participantesResult += this.participantes.get(i).getNome() + ")";
+                bld.append(")");
             } else {
-                participantesResult += this.participantes.get(i).getNome() + ", ";
+                bld.append(", ");
             }
         }
 
-        return participantesResult;
+        return bld.toString();
     }
 
     public void addParticipante(Colaborador participante) {
@@ -183,32 +179,18 @@ public class Projeto {
         }
     }
 
-    public String toString(String position) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        return "    [" + position + "] Título: " + this.titulo + "\n"
-             + "    Data de Ínicio: " + this.dataInicio.format(formatter) + "\n"
-             + "    Data de Termino: " + this.dataTermino.format(formatter) + "\n"
-             + "    Agência Financiadora: " + this.agenciaFinanciadora + "\n"
-             + "    Valor Financiado: R$ " + this.valorFinanciado + "\n"
-             + "    Objetivo: " + this.objetivo + "\n"
-             + "    Descrição: " + this.descricao + "\n"
-             + "    Status: " + this.status + "\n"
-             + "    Participantes: " + stringParticipantes();
-    }
-
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        return "    Título: " + this.titulo + "\n"
-             + "    Data de Ínicio: " + this.dataInicio.format(formatter) + "\n"
-             + "    Data de Termino: " + this.dataTermino.format(formatter) + "\n"
-             + "    Agência Financiadora: " + this.agenciaFinanciadora + "\n"
-             + "    Valor Financiado: R$ " + this.valorFinanciado + "\n"
-             + "    Objetivo: " + this.objetivo + "\n"
-             + "    Descrição: " + this.descricao + "\n"
-             + "    Status: " + this.status + "\n"
-             + "    Participantes: " + stringParticipantes();
+        return "Título: " + this.titulo + "\n"
+             + "Data de Ínicio: " + this.dataInicio.format(formatter) + "\n"
+             + "Data de Termino: " + this.dataTermino.format(formatter) + "\n"
+             + "Agência Financiadora: " + this.agenciaFinanciadora + "\n"
+             + "Valor Financiado: R$ " + this.valorFinanciado + "\n"
+             + "Objetivo: " + this.objetivo + "\n"
+             + "Descrição: " + this.descricao + "\n"
+             + "Status: " + this.status + "\n"
+             + "Participantes: " + stringParticipantes();
     }
 }

@@ -11,9 +11,7 @@ public class Colaborador extends Usuario {
     private ArrayList<Projeto> projetos;
 
     public Colaborador(String nome, String email) {
-        super(nome, email);
-        this.publicacoes = new ArrayList<Publicacao>();
-        this.projetos = new ArrayList<Projeto>();
+        this(nome, email, new ArrayList<Publicacao>(), new ArrayList<Projeto>());
     }
 
     public Colaborador(String nome, String email, ArrayList<Publicacao> publicacoes, ArrayList<Projeto> projetos) {

@@ -124,7 +124,7 @@ public class Controlador {
     public void alocarColaborador(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Alocação de Colaborador!\n");
 
-        String titulo = leitor.stringReader(reader, "Digite o título do projeto ao qual deseja alocar um Colaborador: ");
+        String titulo = leitor.stringReader(reader, "Digite o título do projeto: ");
 
         Projeto projeto = laboratorio.procurarProjeto(titulo);
 
@@ -184,17 +184,6 @@ public class Controlador {
         }
     }
 
-    public void mostrarInformacoesColaborador(Colaborador colaborador) {
-        System.out.println("\nNome: " + colaborador.getNome());
-        System.out.println("E-mail: " + colaborador.getEmail());
-        System.out.println("Projetos: ");
-        this.printProjetosByStatus(colaborador, "Em andamento");
-        this.printProjetosByStatus(colaborador, "Concluído");
-        System.out.println("Produções Acadêmicas: ");
-        this.printPublicacoes(colaborador);
-        this.printOrientacoes(colaborador);
-    }
-
     /* Projeto */
 
     public Projeto buscarProjeto(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
@@ -242,7 +231,7 @@ public class Controlador {
 
                 if (professorBusca != null) {
                     if (professorBusca instanceof Professor) {
-                        boolean addOption = leitor.stringBoolReader(reader, "\nJá existe um professor cadastrado com esse nome, deseja adicioná-lo? (Digite 'sim' ou 'não'): ");
+                        boolean addOption = leitor.stringBoolReader(reader, "\nJá existe um professor cadastrado com esse nome, deseja adicioná-lo?");
 
                         if (addOption) {
                             professor = professorBusca;
@@ -288,7 +277,7 @@ public class Controlador {
 
         if (projeto != null) {
             if (projeto.getStatus().equals("Em elaboração")) {
-                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em elaboração' para 'Em andamento'? (Digite 'sim' ou 'não'): ");
+                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em elaboração' para 'Em andamento'?");
 
                 if (statusOption) {
                     if (projeto.alterarStatus()) {
@@ -309,7 +298,7 @@ public class Controlador {
                             }
                         }
 
-                        boolean deleteOption = leitor.stringBoolReader(reader, "\nDeseja remover estes alunos do projeto? (Digite 'sim' ou 'não'): ");
+                        boolean deleteOption = leitor.stringBoolReader(reader, "\nDeseja remover estes alunos do projeto?");
 
                         if (deleteOption) {
                             for (int i = 0; i < alunosRemover.size(); i++) {
@@ -324,7 +313,7 @@ public class Controlador {
                     System.out.println("\nStatus não alterado!");
                 }
             } else if (projeto.getStatus().equals("Em andamento")) {
-                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em andamento' para 'Concluído'? (Digite 'sim' ou 'não'): ");
+                boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em andamento' para 'Concluído'?");
 
                 if (statusOption) {
                     if (projeto.alterarStatus()) {
@@ -363,39 +352,13 @@ public class Controlador {
         ArrayList<Publicacao> publicacoes = projeto.getPublicacoes();
 
         if (!publicacoes.isEmpty()) {
-            System.out.println("\n\nProdução Acadêmica:\n");
+            System.out.println("\n\nProdução Acadêmica:");
 
             for (int i = 0; i < publicacoes.size(); i++) {
-                System.out.println(publicacoes.get(i).toString());
+                System.out.println("\n    [" + (i + 1) + "] " + publicacoes.get(i).toString().replace("\n", "\n    "));
             }
-        }
-
-        System.out.println("");
-    }
-
-    public void printProjetosByStatus(Colaborador colaborador, String status) {
-        int counter = 0;
-
-        ArrayList<Projeto> projetos = colaborador.getProjetos();
-
-        for (int i = 0; i < projetos.size(); i++) {
-            if (projetos.get(i).getStatus().equals(status)) {
-                counter++;
-            }
-        }
-
-        if (counter > 0) {
-            System.out.println(status + ":");
-
-            for (int i = 0; i < projetos.size(); i++) {
-                if (projetos.get(i).getStatus().equals(status)) {
-                    System.out.println("\n" + projetos.get(i).toString());
-                }
-            }
-
-            System.out.println("");
         } else {
-            System.out.println("Sem projetos com o status " + status + "!");
+            System.out.println("");
         }
     }
 
@@ -413,7 +376,7 @@ public class Controlador {
 
             int ano = Integer.parseInt(leitor.regexValidatorReader(reader, "Digite o ano de Publicação (Formato: yyyy): ", "^[0-9]{4}$"));
 
-            boolean optProjeto = leitor.stringBoolReader(reader, "A publicação tem algum projeto associado? (Digite 'sim' ou 'não'): ");
+            boolean optProjeto = leitor.stringBoolReader(reader, "A publicação tem algum projeto associado?");
 
             if (optProjeto) {
                 boolean loop = true;
@@ -518,26 +481,12 @@ public class Controlador {
         return publicacoesResultado;
     }
 
-    public void printPublicacoes(Colaborador colaborador) {
-        ArrayList<Publicacao> publicacoes = colaborador.getPublicacoes();
-
-        if (!publicacoes.isEmpty()) {
-            System.out.println("Publicações:");
-            for (int i = 0; i < publicacoes.size(); i++) {
-                System.out.println("\n" + publicacoes.get(i).toString());
-            }
-            System.out.println("");
-        } else {
-            System.out.println("Sem Publicações!");
-        }
-    }
-
     /* Orientação */
 
     public void adicionarOrientacao(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
         System.out.println("Adicionar uma Orientação!\n");
 
-        String nomeOrientador = leitor.stringReader(reader, "Digite o nome do Orientador: ");
+        String nomeOrientador = leitor.stringReader(reader, "Digite o nome do Professor (Orientador): ");
 
         Colaborador orientador = laboratorio.procurarColaborador(nomeOrientador);
 
@@ -595,23 +544,5 @@ public class Controlador {
         }
 
         return orientacoesResultado;
-    }
-
-    public void printOrientacoes(Colaborador colaborador) {
-        if (colaborador instanceof Professor) {
-            Professor professor = (Professor)colaborador;
-
-            ArrayList<Orientacao> orientacoes = professor.getOrientacoes();
-
-            if (!orientacoes.isEmpty()) {
-                System.out.println("Orientações:");
-                for (int i = 0; i < orientacoes.size(); i++) {
-                    Orientacao orientacao = orientacoes.get(i);
-                    System.out.println("    [" + (i + 1) + "] Título: " + orientacao.getTitulo() + ", Ano de Início: " + orientacao.getAnoOrientacao() + ", Aluno: " + orientacao.getOrientando().getNome());
-                }
-            } else {
-                System.out.println("Sem Orientações!");
-            }
-        }
     }
 }

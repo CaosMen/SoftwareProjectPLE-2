@@ -1,5 +1,6 @@
 package leitor;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ public class Leitor {
     }  
 
     public boolean isDate(String s) {
-        return s != null && s.matches("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4}$");
+        return s != null && s.matches("^(\\d\\d)/(\\d\\d)/\\d\\d\\d\\d$");
     }
 
     public int optionReader(Scanner reader, String textInput, int startValue, int endValue) {
@@ -19,11 +20,18 @@ public class Leitor {
             String input = reader.nextLine();
 
             if (isNumeric(input)) {
-                int number = Integer.parseInt(input);
-                if (number >= startValue && number <= endValue) {
-                    return number;
-                } else {
-                    System.out.println("O número deve ser igual ou estar entre " + startValue + " e " + endValue + "!");
+                String error = "O número deve ser igual ou estar entre " + startValue + " e " + endValue + "!";
+                
+                try {
+                    int number = Integer.parseInt(input);
+                
+                    if (number >= startValue && number <= endValue) {
+                        return number;
+                    } else {
+                        System.out.println(error);
+                    }
+                } catch(NumberFormatException ex) {
+                    System.out.println(error);
                 }
             } else {
                 System.out.println("Digite apenas números inteiros de " + startValue + " até " + endValue + "!");
@@ -39,8 +47,13 @@ public class Leitor {
 
             if (isDate(input)) {
                 String[] inputSplit = input.split("/");
-
-                return LocalDate.of(Integer.parseInt(inputSplit[2]), Integer.parseInt(inputSplit[1]), Integer.parseInt(inputSplit[0]));
+                
+                try {
+                    LocalDate date = LocalDate.of(Integer.parseInt(inputSplit[2]), Integer.parseInt(inputSplit[1]), Integer.parseInt(inputSplit[0]));
+                    return date;
+                } catch(DateTimeException ex) {
+                    System.out.println("Data inválida!");
+                }
             } else {
                 System.out.println("Formato de data incorreto!");
             }
@@ -77,16 +90,16 @@ public class Leitor {
 
     public boolean stringBoolReader(Scanner reader, String textInput) {
         while (true) {
-            System.out.print(textInput);
+            System.out.print(textInput + " (Digite 's' ou 'n'): ");
 
             String input = reader.nextLine();
 
-            if (input.equalsIgnoreCase("sim")) {
+            if (input.equalsIgnoreCase("s")) {
                 return true;
-            } else if (input.equalsIgnoreCase("não")) {
+            } else if (input.equalsIgnoreCase("n")) {
                 return false;
             } else {
-                System.out.println("Digite apenas 'sim' ou 'não'!");
+                System.out.println("Digite apenas 's' ou 'n'!");
             }
         }
     }

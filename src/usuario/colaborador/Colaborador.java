@@ -4,6 +4,8 @@ import usuario.*;
 import publicacao.*;
 import projeto.*;
 
+import usuario.colaborador.strategypattern.RelatorioColaborador;
+
 import java.util.ArrayList;
 
 public class Colaborador extends Usuario {
@@ -78,5 +80,11 @@ public class Colaborador extends Usuario {
         }
 
         return projetosResult;
+    }
+
+    public String stringRelatorio() {
+        RelatorioColaborador relatorio = new RelatorioColaborador();
+
+        return relatorio.gerar(this);
     }
 }

@@ -80,11 +80,15 @@ public class Publicacao {
         return bld.toString();
     }
 
+    @Override
     public String toString() {
         return "Título: " + this.titulo + "\n"
              + "Nome da Conferência: " + this.nomeConferencia + "\n"
              + "Ano da Publicação: " + this.anoPublicacao + "\n"
-             + "Autores: " + stringAutores() + "\n"
-             + "Projeto associado: " + ((this.projeto == null) ? ("Sem projeto associado!") : ("\n\n" + this.projeto.toString()));
+             + "Autores: " + stringAutores();
+    }
+
+    public String toStringProjeto() {
+        return this.toString() + "\nProjeto associado: " + ((this.projeto == null) ? ("Sem projeto associado!") : ("\n\n" + this.projeto.toString())); 
     }
 }

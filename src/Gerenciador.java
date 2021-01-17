@@ -86,7 +86,7 @@ public class Gerenciador {
                     Colaborador colaborador = controlador.buscarColaborador(reader, laboratorio, leitor);
 
                     if (colaborador != null) {
-                        controlador.mostrarInformacoesColaborador(colaborador);
+                        System.out.print(colaborador.stringRelatorio());
                     }
 
                     break;
@@ -108,8 +108,6 @@ public class Gerenciador {
                     break;
                 case 0:
                     loop = false;
-
-                    // mensagem ao sair!
 
                     break;
                 default:

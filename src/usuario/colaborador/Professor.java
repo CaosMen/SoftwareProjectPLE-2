@@ -4,6 +4,8 @@ import publicacao.*;
 import projeto.*;
 import orientacao.*;
 
+import usuario.colaborador.strategypattern.RelatorioProfessor;
+
 import java.util.ArrayList;
 
 public class Professor extends Colaborador {
@@ -43,5 +45,12 @@ public class Professor extends Colaborador {
         if (this.orientacoes.contains(orientacao)) {
             this.orientacoes.remove(orientacao);
         }
+    }
+
+    @Override
+    public String stringRelatorio() {
+        RelatorioProfessor relatorio = new RelatorioProfessor();
+
+        return relatorio.gerar(this);
     }
 }

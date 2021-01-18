@@ -4,6 +4,12 @@
 
 <h2 align="center">Sistema de Gestão de Produtividade Acadêmica</h2>
 
+## 💻 Design Patterns
+* Strategy Pattern
+    * Implementado na parte de geração do Relatório referente ao colaborador (se encontra na pasta da classe Colaborador)
+* Command Pattern
+    * Implementado e utilizado na classe "Projeto" com o intuito de controlar a alteração do status do projeto (se encontra na pasta da classe Projeto)
+
 ## 🔧 Recursos
 * Alocação de participantes
 * Alteração do "status" dos Projetos

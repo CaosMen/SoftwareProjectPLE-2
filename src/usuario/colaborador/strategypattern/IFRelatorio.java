@@ -50,6 +50,8 @@ public interface IFRelatorio {
             for (int i = 0; i < publicacoes.size(); i++) {
                 bld.append("\n    [" + (i + 1) + "] " + publicacoes.get(i).toStringProjeto().replace("\n", "\n    ") + "\n");
             }
+
+            bld.append("\n");
         } else {
             bld.append("Sem Publicações!\n");
         }

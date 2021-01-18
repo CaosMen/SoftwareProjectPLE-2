@@ -14,7 +14,7 @@ public class Gerenciador {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } else {
-                Runtime.getRuntime().exec("clear");
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
             }
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -86,7 +86,7 @@ public class Gerenciador {
                     Colaborador colaborador = controlador.buscarColaborador(reader, laboratorio, leitor);
 
                     if (colaborador != null) {
-                        System.out.print(colaborador.stringRelatorio());
+                        System.out.print(controlador.colaboradorRelatorio(colaborador));
                     }
 
                     break;

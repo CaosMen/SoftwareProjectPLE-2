@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Leitor {
+    public boolean regexValidator(String s, String regex) {  
+        return s != null && s.matches(regex);  
+    } 
+
     public boolean isNumeric(String s) {  
         return s != null && s.matches("[0-9]+");  
     }  

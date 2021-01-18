@@ -11,6 +11,8 @@ import projeto.*;
 import usuario.*;
 import leitor.*;
 import usuario.colaborador.*;
+import usuario.colaborador.strategypattern.*;
+import projeto.commandpattern.*;
 
 public class Controlador {
     /* Exibição Menu */
@@ -184,6 +186,18 @@ public class Controlador {
         }
     }
 
+    public String colaboradorRelatorio(Colaborador colaborador) {
+        Relatorio relatorio;
+
+        if (colaborador instanceof Professor) {
+            relatorio = new Relatorio(new RelatorioProfessor());
+        } else {
+            relatorio = new Relatorio(new RelatorioColaborador());
+        }
+
+        return relatorio.gerarRelatorio(colaborador);
+    }
+
     /* Projeto */
 
     public Projeto buscarProjeto(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
@@ -269,6 +283,8 @@ public class Controlador {
     }
 
     public void alterarStatus(Scanner reader, Laboratorio laboratorio, Leitor leitor) {
+        Invoker invokerOperation = new Invoker();
+
         System.out.println("Alterador de status!\n");
 
         String titulo = leitor.stringReader(reader, "Digite o título do Projeto: ");
@@ -280,7 +296,7 @@ public class Controlador {
                 boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em elaboração' para 'Em andamento'?");
 
                 if (statusOption) {
-                    if (projeto.alterarStatus()) {
+                    if (invokerOperation.executeOperation(new AlterarInicio(projeto))) {
                         System.out.println("\nStatus alterado com sucesso!");
                     } else {
                         System.out.println("\nStatus não alterado!\n\nOs seguintes 'alunos de gradução' estão em dois projetos com o status 'Em andamento': ");
@@ -316,7 +332,7 @@ public class Controlador {
                 boolean statusOption = leitor.stringBoolReader(reader, "\nVocê deseja alterar o status 'Em andamento' para 'Concluído'?");
 
                 if (statusOption) {
-                    if (projeto.alterarStatus()) {
+                    if (invokerOperation.executeOperation(new AlterarFinal(projeto))) {
                         System.out.println("\nStatus alterado com sucesso!");
                     } else {
                         System.out.println("\nStatus não alterado! (Não existem publicações associadas ao projeto)");
@@ -423,7 +439,7 @@ public class Controlador {
             ArrayList<Colaborador> autores = new ArrayList<Colaborador>();
 
             for (int i = 0; i < addColaboradores.length; i++) {
-                if (addColaboradores[i].matches("^[0-9]{1,9}$")) {
+                if (leitor.regexValidator(addColaboradores[i], "^([1-9][0-9]{0,8})$")) {
                     int position = Integer.parseInt(addColaboradores[i]) - 1;
 
                     if (position >= 0 && position < colaboradores.size()) {

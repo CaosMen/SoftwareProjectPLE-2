@@ -1,6 +1,7 @@
 package projeto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -15,7 +16,8 @@ public class Projeto {
     private float valorFinanciado;
     private String objetivo;
     private String descricao;
-    private String status = "Em elaboração";
+    private int status = 0;
+    private ArrayList<String> allStatus = new ArrayList<String>(Arrays.asList("Em elaboração", "Em andamento", "Concluído"));
     private ArrayList<Colaborador> participantes = new ArrayList<Colaborador>();
     private ArrayList<Publicacao> publicacoes = new ArrayList<Publicacao>();
 
@@ -88,15 +90,15 @@ public class Projeto {
     }
 
     public String getStatus() {
-        return status;
+        return this.allStatus.get(this.status);
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = allStatus.indexOf(status);
     }
 
-    public boolean alterarStatus() {
-        if (this.status.equals("Em elaboração")) {
+    public boolean alterarStatusInicial() {
+        if (this.status == 0) {
             boolean alunoCheck = true;
 
             for (int i = 0; i < this.participantes.size(); i++) {
@@ -110,12 +112,18 @@ public class Projeto {
             }
 
             if (alunoCheck) {
-                this.status = "Em andamento";
+                this.status = 1;
 
                 return true;
             }
-        } else if (this.status.equals("Em andamento") && !this.publicacoes.isEmpty()) {
-            this.status = "Concluído";
+        }
+
+        return false;
+    }
+
+    public boolean alterarStatusFinal() {
+        if (this.status == 1 && !this.publicacoes.isEmpty()) {
+            this.status = 2;
 
             return true;
         }
@@ -190,7 +198,7 @@ public class Projeto {
              + "Valor Financiado: R$ " + this.valorFinanciado + "\n"
              + "Objetivo: " + this.objetivo + "\n"
              + "Descrição: " + this.descricao + "\n"
-             + "Status: " + this.status + "\n"
+             + "Status: " + this.allStatus.get(this.status) + "\n"
              + "Participantes: " + stringParticipantes();
     }
 }

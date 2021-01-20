@@ -14,8 +14,6 @@ public interface IFRelatorio {
 
         StringBuilder bld = new StringBuilder();
 
-        boolean has = false;
-
         int j = 1;
 
         for (int i = 0; i < projetos.size(); i++) {
@@ -24,12 +22,11 @@ public interface IFRelatorio {
             if (projetoAtual.getStatus().equals(status)) {
                 bld.append("\n    [" + j + "] " + projetoAtual.toString().replace("\n", "\n    ") + "\n");
 
-                has = true;
                 j++;
             }
         }
 
-        if (has) {
+        if (j > 1) {
             bld.insert(0, status + ":\n");
             bld.append("\n");
         } else {
